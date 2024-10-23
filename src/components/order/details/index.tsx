@@ -70,12 +70,6 @@ export const OrderDetails = ({ order }: Props) => {
             />
             <Divider />
             <Info
-                icon={<StoreOutlinedIcon />}
-                label={t("orders.fields.store")}
-                value={order?.store?.title}
-            />
-            <Divider />
-            <Info
                 icon={<MopedOutlinedIcon />}
                 label={t("orders.fields.courier")}
                 value={

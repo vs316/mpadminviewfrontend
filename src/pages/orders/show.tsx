@@ -14,10 +14,9 @@ import Paper from "@mui/material/Paper";
 import {
     OrderDeliveryMap,
     OrderDetails,
-    OrderProducts,
     Card,
+    RefineListView,
 } from "../../components";
-import { RefineListView } from "../../components";
 import type { IOrder } from "../../interfaces";
 
 export const OrderShow = () => {
@@ -33,7 +32,7 @@ export const OrderShow = () => {
 
     const { mutate } = useUpdate({
         resource: "orders",
-        id: record?.id.toString(),
+        id: record?.shipment_id.toString(),
     });
 
     const theme = useTheme();
@@ -68,7 +67,7 @@ export const OrderShow = () => {
             <RefineListView
                 title={
                     <Typography variant="h5">
-                        {t("orders.order")} #{record?.orderNumber}
+                        {t("orders.order")} #{record?.shipment_id}
                     </Typography>
                 }
                 headerButtons={[
@@ -119,13 +118,13 @@ export const OrderShow = () => {
                         >
                             <OrderDeliveryMap order={record} />
                         </Card>
-                        <Paper
+                        {/* <Paper
                             sx={{
                                 marginTop: theme.spacing(3),
                             }}
                         >
                             <OrderProducts order={record} />
-                        </Paper>
+                        </Paper> */}
                     </Grid>
                     <Grid xs={12} md={6} lg={4} height="max-content">
                         <Card title={t("orders.titles.deliveryDetails")}>

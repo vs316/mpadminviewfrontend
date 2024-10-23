@@ -71,11 +71,11 @@ export const CustomerShow = () => {
     const columns = React.useMemo<GridColDef<IOrder>[]>(
         () => [
             {
-                field: "orderNumber",
-                headerName: t("orders.fields.orderNumber"),
+                field: "orderId",
+                headerName: t("orders.fields.orderID"),
                 width: 88,
                 renderCell: function render({ row }) {
-                    return <Typography>#{row.id}</Typography>;
+                    return <Typography>#{row.shipment_id}</Typography>;
                 },
             },
             {
@@ -86,15 +86,15 @@ export const CustomerShow = () => {
                     return <OrderStatus status={row.status.text} />;
                 },
             },
-            {
-                field: "products",
-                headerName: t("orders.fields.products"),
-                width: 184,
-                sortable: false,
-                renderCell: function render({ row }) {
-                    return <OrderTableColumnProducts order={row} />;
-                },
-            },
+            // {
+            //     field: "products",
+            //     headerName: t("orders.fields.products"),
+            //     width: 184,
+            //     sortable: false,
+            //     renderCell: function render({ row }) {
+            //         return <OrderTableColumnProducts order={row} />;
+            //     },
+            // },
             {
                 field: "amount",
                 align: "right",
@@ -104,7 +104,7 @@ export const CustomerShow = () => {
                     return (
                         <NumberField
                             options={{
-                                currency: "USD",
+                                currency: "INR",
                                 style: "currency",
                                 notation: "compact",
                             }}
@@ -114,13 +114,13 @@ export const CustomerShow = () => {
                 },
                 width: 100,
             },
-            {
-                field: "store",
-                headerName: t("orders.fields.store"),
-                width: 150,
-                valueGetter: ({ row }) => row.store.title,
-                sortable: false,
-            },
+            // {
+            //     field: "store",
+            //     headerName: t("orders.fields.store"),
+            //     width: 150,
+            //     valueGetter: ({ row }) => row.store.title,
+            //     sortable: false,
+            // },
         ],
         [t]
     );

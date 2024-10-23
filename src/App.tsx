@@ -93,7 +93,7 @@ const App: React.FC = () => {
                                             },
                                         },
                                         {
-                                            name: "users",
+                                            name: "user",
                                             list: "/customers",
                                             show: "/customers/:id",
                                             meta: {

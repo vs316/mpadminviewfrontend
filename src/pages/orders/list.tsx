@@ -51,14 +51,7 @@ export const OrderList = () => {
     const columns: GridColDef<IOrder>[] = [
         { field: "id", headerName: "Order ID", width: 100 },
         { field: "amount", headerName: "Amount", width: 150 },
-        { field: "orderNumber", headerName: "Order Number", width: 200 },
         { field: "status", headerName: "Status", width: 150 },
-        {
-            field: "store",
-            headerName: "Store",
-            width: 200,
-            valueGetter: (params) => params.row.store.title,
-        },
         {
             field: "user",
             headerName: "Customer",
@@ -96,11 +89,9 @@ export const OrderList = () => {
         maxItemCount: 50,
         mapData: (item) => {
             return {
-                id: item.id,
+                id: item.shipment_id,
                 amount: item.amount,
-                orderNumber: item.orderNumber,
                 status: item.status.text,
-                store: item.store.title,
                 user: `${item.user.firstName} ${item.user.lastName}`,
             };
         },

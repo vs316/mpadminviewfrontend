@@ -35,7 +35,7 @@ export const CustomerList = ({ children }: PropsWithChildren) => {
             try {
                 const data = await userService.getUsers();
                 // Add an incremental id field starting from 1
-                const dataWithIds = data.map((user, index) => ({
+                const dataWithIds = data.map((user: IUser, index: number) => ({
                     ...user,
                     id: index + 1, // Add id starting from 1
                 }));

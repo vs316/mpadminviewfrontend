@@ -1,11 +1,11 @@
 export interface IOrderChart {
-    count: number;
     status:
         | "waiting"
         | "ready"
         | "on the way"
         | "delivered"
         | "could not be delivered";
+    created_at: date;
 }
 
 export interface IOrderTotalCount {
@@ -14,9 +14,9 @@ export interface IOrderTotalCount {
 }
 
 export interface ISalesChart {
-    date: string;
+    created_at: date;
     title: "Order Count" | "Order Amount";
-    value: number;
+    amount: number;
 }
 
 export interface IOrderStatus {
@@ -73,31 +73,16 @@ export interface IStore {
 }
 
 export interface IOrder {
-    id: number;
+    shipment_id: number;
     user: IUser;
     createdAt: string;
-    products: IProduct[];
     status: IOrderStatus;
     address: IAddress; // Existing address for the order
-    store: IStore;
     courier: ICourier;
     events: IEvent[];
-    orderNumber: number;
     amount: number;
     shipFrom?: IShipFrom; // Adding shipFrom
     shipTo?: IShipTo; // Adding shipTo
-}
-
-export interface IProduct {
-    id: number;
-    name: string;
-    isActive: boolean;
-    description: string;
-    images: (IFile & { thumbnailUrl?: string })[];
-    createdAt: string;
-    price: number;
-    category: ICategory;
-    stock: number;
 }
 
 export interface ICategory {
