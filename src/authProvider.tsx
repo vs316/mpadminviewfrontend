@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Authenticator } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 Amplify.configure({
     Auth: {
@@ -13,7 +14,7 @@ Amplify.configure({
     },
 });
 
-// Define form fields for sign up and sign in (login)
+// Define form fields for sign-up and sign-in (login)
 const formFields = {
     signUp: {
         username: {
@@ -62,9 +63,11 @@ const formFields = {
         },
     },
 };
+
 interface AuthProviderProps {
     children: ReactNode;
 }
+
 const AuthProvider = ({ children }: AuthProviderProps) => {
     return (
         <div>
@@ -73,9 +76,22 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
                     if (user) {
                         return (
                             <div>
-                                <p>Welcome, {user.username}</p>
                                 <button onClick={signOut}>Sign Out</button>
                                 <div>{children}</div>
+                                {/* Adding the Logout icon here */}
+                                <div
+                                    onClick={signOut} // Handle logout on icon click
+                                    style={{
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <LogoutIcon />
+                                    <span style={{ marginLeft: "8px" }}>
+                                        Logout
+                                    </span>
+                                </div>
                             </div>
                         );
                     } else {
@@ -90,4 +106,5 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         </div>
     );
 };
+
 export default AuthProvider;

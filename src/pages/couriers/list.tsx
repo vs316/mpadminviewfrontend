@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { CourierRating, CourierStatus, RefineListView } from "../../components";
+import { CourierStatus, RefineListView } from "../../components";
 import { ICourier } from "../../interfaces";
 import { courierService } from "../../services/courierService"; // Adjust the path as necessary
 
@@ -16,7 +16,7 @@ export const CourierList = ({ children }: PropsWithChildren) => {
     const t = useTranslate();
 
     const [courier, setCouriers] = useState<ICourier[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); // Track loading state
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -27,7 +27,7 @@ export const CourierList = ({ children }: PropsWithChildren) => {
             } catch (err) {
                 setError("Failed to fetch couriers");
             } finally {
-                setLoading(false);
+                setLoading(false); // Set loading to false after fetching
             }
         };
 
@@ -59,14 +59,14 @@ export const CourierList = ({ children }: PropsWithChildren) => {
                 width: 132,
                 headerName: "Phone Number",
             },
-            {
-                field: "rating",
-                width: 156,
-                headerName: "Rating",
-                renderCell: function render({ row }) {
-                    return <CourierRating couriers={row} />;
-                },
-            },
+            // {
+            //     field: "rating",
+            //     width: 156,
+            //     headerName: "Rating",
+            //     renderCell: function render({ row }) {
+            //         return <CourierRating couriers={row} />;
+            //     },
+            // },
             {
                 field: "status",
                 width: 156,
@@ -122,25 +122,14 @@ export const CourierList = ({ children }: PropsWithChildren) => {
                 ]}
             >
                 <Paper>
-                    {(() => {
-                        if (loading) {
-                            return <Typography>Loading couriers...</Typography>;
-                        }
-                        if (error) {
-                            return (
-                                <Typography color="error">{error}</Typography>
-                            );
-                        }
-                        return (
-                            <DataGrid
-                                rows={courier} // Set the rows prop to couriers
-                                columns={columns}
-                                autoHeight
-                                pageSizeOptions={[10, 20, 50, 100]}
-                                getRowId={(row) => row.courier_id} // Use courier_id as the unique identifier
-                            />
-                        );
-                    })()}
+                    <DataGrid
+                        rows={courier} // Set the rows prop to couriers
+                        columns={columns}
+                        autoHeight
+                        loading={loading}
+                        pageSizeOptions={[10, 20, 50, 100]}
+                        getRowId={(row) => row.courier_id} // Use courier_id as the unique identifier
+                    />
                 </Paper>
             </RefineListView>
             {children}

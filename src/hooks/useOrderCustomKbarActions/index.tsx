@@ -9,9 +9,9 @@ import {
 import CheckOutlined from "@mui/icons-material/CheckOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
 
-import type { IOrder } from "../../interfaces";
+import type { IShipment } from "../../interfaces";
 
-export const useOrderCustomKbarActions = (order?: IOrder): void => {
+export const useOrderCustomKbarActions = (order?: IShipment): void => {
   const t = useTranslate();
   const canAcceptOrder = order?.status.text === "Pending";
   const canRejectOrder =
@@ -21,13 +21,13 @@ export const useOrderCustomKbarActions = (order?: IOrder): void => {
 
   const [actions, setActions] = useState<Action[]>([]);
   const { mutate } = useUpdate({
-    resource: "orders",
-    id: order?.id,
+    resource: "shipments",
+    id: order?.shipment_id,
   });
 
   const handleMutate = useCallback(
     (status: { id: number; text: string }) => {
-      if (!order?.id) return;
+      if (!order?.shipment_id) return;
 
       mutate({
         values: {
@@ -35,7 +35,7 @@ export const useOrderCustomKbarActions = (order?: IOrder): void => {
         },
       });
     },
-    [mutate, order?.id],
+    [mutate, order?.shipment_id],
   );
 
   useEffect(() => {

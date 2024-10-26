@@ -60,8 +60,8 @@ export const CourierTableReviews = (props: Props) => {
                 },
             },
             {
-                field: "orderNumber",
-                headerName: t("orders.fields.orderNumber"),
+                field: "shipmentID",
+                headerName: "Shipment ID",
                 filterable: false,
                 sortable: false,
                 renderCell: function render({ row }: { row: IReview }) {
@@ -69,7 +69,7 @@ export const CourierTableReviews = (props: Props) => {
                         <Chip
                             variant="outlined"
                             size="small"
-                            label={`#${row.order.orderNumber}`}
+                            label={`#${row.order.shipment_id}`}
                         />
                     );
                 },

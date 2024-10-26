@@ -32,11 +32,10 @@ export const OrderDeliveryMap = ({ order }: Props) => {
                     url: "/images/marker-courier.svg",
                 }}
                 position={{
-                    lat: Number(order?.store.address.coordinate[0]),
-                    lng: Number(order?.store.address.coordinate[1]),
+                    lat: 80,
+                    lng: 80,
                 }}
             />
         </GoogleMap>
     );
 };
-

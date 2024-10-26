@@ -1,5 +1,5 @@
 import { DevtoolsProvider, DevtoolsPanel } from "@refinedev/devtools";
-import { Authenticated, Refine } from "@refinedev/core";
+import { Authenticated, Refine, NotificationProvider } from "@refinedev/core";
 import { KBarProvider } from "@refinedev/kbar";
 import {
     ErrorComponent,
@@ -20,24 +20,22 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MopedOutlined from "@mui/icons-material/MopedOutlined";
 import Dashboard from "@mui/icons-material/Dashboard";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import LocalShippingIcon from "@mui/icons-material/LocalShippingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import FastfoodOutlinedIcon from "@mui/icons-material/FastfoodOutlined";
-import LabelOutlinedIcon from "@mui/icons-material/LabelOutlined";
-import StoreOutlinedIcon from "@mui/icons-material/StoreOutlined";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Box from "@mui/material/Box";
 import { DashboardPage } from "./pages/dashboard";
-//import { OrderList, OrderShow } from "./pages/orders";
+import { useSnackbar, VariantType } from "notistack";
 import { CustomerShow, CustomerList } from "./pages/customers";
 import { CourierList, CourierCreate, CourierEdit } from "./pages/couriers";
 import { AuthPage } from "./pages/auth";
 import { ColorModeContextProvider } from "./contexts";
 import { Header, Title } from "./components";
 import { OrderList } from "./pages/orders/list";
-import { OrderShow } from "./pages/orders/show";
+//import { OrderShow } from "./pages/orders/show";
 //import { useAutoLoginForDemo } from "./hooks";
 import AuthProvider from "./authProvider";
+import { CustomNotificationProvider } from "./hooks/CustomNotificationProvider";
 const API_URL = "http://localhost:3000";
 
 const App: React.FC = () => {
@@ -57,7 +55,7 @@ const App: React.FC = () => {
                         <GlobalStyles
                             styles={{ html: { WebkitFontSmoothing: "auto" } }}
                         />
-                        <RefineSnackbarProvider>
+                        <CustomNotificationProvider>
                             <DevtoolsProvider>
                                 <Refine
                                     routerProvider={routerProvider}
@@ -68,11 +66,8 @@ const App: React.FC = () => {
                                         warnWhenUnsavedChanges: true,
                                         breadcrumb: false,
                                         useNewQueryKeys: true,
-                                        projectId: "m0mGXj-kFuoJe-LTmTJP",
+                                        //projectId: "m0mGXj-kFuoJe-LTmTJP",
                                     }}
-                                    notificationProvider={
-                                        useNotificationProvider
-                                    }
                                     resources={[
                                         {
                                             name: "dashboard",
@@ -83,13 +78,11 @@ const App: React.FC = () => {
                                             },
                                         },
                                         {
-                                            name: "orders",
+                                            name: "Shipments",
                                             list: "/orders",
                                             show: "/orders/:id",
                                             meta: {
-                                                icon: (
-                                                    <ShoppingBagOutlinedIcon />
-                                                ),
+                                                icon: <LocalShippingIcon />,
                                             },
                                         },
                                         {
@@ -102,32 +95,7 @@ const App: React.FC = () => {
                                                 ),
                                             },
                                         },
-                                        // {
-                                        //     name: "products",
-                                        //     list: "/products",
-                                        //     create: "/products/new",
-                                        //     edit: "/products/:id/edit",
-                                        //     show: "/products/:id",
-                                        //     meta: {
-                                        //         icon: <FastfoodOutlinedIcon />,
-                                        //     },
-                                        // },
-                                        // {
-                                        //     name: "categories",
-                                        //     list: "/categories",
-                                        //     meta: {
-                                        //         icon: <LabelOutlinedIcon />,
-                                        //     },
-                                        // },
-                                        // {
-                                        //     name: "stores",
-                                        //     list: "/stores",
-                                        //     create: "/stores/new",
-                                        //     edit: "/stores/:id/edit",
-                                        //     meta: {
-                                        //         icon: <StoreOutlinedIcon />,
-                                        //     },
-                                        // },
+
                                         {
                                             name: "couriers",
                                             list: "/couriers",
@@ -186,11 +154,11 @@ const App: React.FC = () => {
                                                     index
                                                     element={<OrderList />}
                                                 />
-                                                <Route
+                                                {/* <Route
                                                     path=":id"
                                                     index
                                                     element={<OrderShow />}
-                                                />
+                                                /> */}
                                             </Route>
                                             <Route
                                                 path="/customers"
@@ -205,45 +173,6 @@ const App: React.FC = () => {
                                                     element={<CustomerShow />}
                                                 />
                                             </Route>
-
-                                            {/* <Route
-                                                path="/products"
-                                                element={
-                                                    <ProductList>
-                                                        <Outlet />
-                                                    </ProductList>
-                                                }
-                                            >
-                                                <Route
-                                                    path=":id/edit"
-                                                    element={<ProductEdit />}
-                                                />
-                                                <Route
-                                                    path="new"
-                                                    element={<ProductCreate />}
-                                                />
-                                            </Route> */}
-
-                                            {/* <Route path="/stores">
-                                            <Route
-                                                index
-                                                element={<StoreList />}
-                                            />
-                                            <Route
-                                                path="new"
-                                                element={<StoreCreate />}
-                                            />
-                                            <Route
-                                                path=":id/edit"
-                                                element={<StoreEdit />}
-                                            />
-                                        </Route>
-
-                                        <Route
-                                            path="/categories"
-                                            element={<CategoryList />}
-                                        />
-                                        */}
 
                                             <Route path="/couriers">
                                                 <Route
@@ -353,7 +282,7 @@ const App: React.FC = () => {
                                 </Refine>
                                 <DevtoolsPanel />
                             </DevtoolsProvider>
-                        </RefineSnackbarProvider>
+                        </CustomNotificationProvider>
                     </ColorModeContextProvider>
                 </KBarProvider>
             </AuthProvider>

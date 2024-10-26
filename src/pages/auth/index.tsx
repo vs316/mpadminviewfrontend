@@ -2,11 +2,6 @@ import * as React from "react";
 import { AuthPage as MUIAuthPage, type AuthProps } from "@refinedev/mui";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
-import {
-    FinefoodsLogoIcon,
-    FinefoodsLogoText,
-} from "../../components/icons/finefoods-logo";
-
 // Import Cognito and Amplify
 import { Authenticator } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
@@ -30,25 +25,21 @@ const formFields = {
             order: 1,
             placeholder: "Choose a username",
             label: "Username",
-            inputProps: { required: true },
         },
         email: {
             order: 2,
             placeholder: "Enter your email address",
             label: "Email",
-            inputProps: { type: "email", required: true },
         },
         password: {
             order: 3,
             placeholder: "Enter your password",
             label: "Password",
-            inputProps: { type: "password", required: true },
         },
         confirm_password: {
             order: 4,
             placeholder: "Confirm your password",
             label: "Confirm Password",
-            inputProps: { type: "password", required: true },
         },
     },
     signIn: {
@@ -56,19 +47,16 @@ const formFields = {
             order: 1,
             placeholder: "Enter your username or email",
             label: "Username",
-            inputProps: { required: true },
         },
         email: {
             order: 2,
             placeholder: "Enter your email address",
             label: "Email",
-            inputProps: { type: "email", required: true },
         },
         password: {
             order: 3,
             placeholder: "Enter your password",
             label: "Password",
-            inputProps: { type: "password", required: true },
         },
     },
 };
@@ -92,7 +80,9 @@ const renderAuthContent = (content: React.ReactNode) => {
                     gap="12px"
                     marginBottom="16px"
                 >
-                    <FinefoodsLogoIcon
+                    {" "}
+                    Admin Panel
+                    {/* <FinefoodsLogoIcon
                         style={{
                             width: 64,
                             height: 64,
@@ -105,7 +95,7 @@ const renderAuthContent = (content: React.ReactNode) => {
                             width: "300px",
                             height: "auto",
                         }}
-                    />
+                    /> */}
                 </Box>
             </Link>
             {content}

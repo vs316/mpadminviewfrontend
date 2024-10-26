@@ -16,7 +16,7 @@ import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
-import type { IEvent, IOrder } from "../../../interfaces";
+import type { IOrder } from "../../../interfaces";
 import Skeleton from "@mui/material/Skeleton";
 
 type Props = {
@@ -42,7 +42,7 @@ export const OrderDetails = ({ order }: Props) => {
                     (el) => el.status === order?.status?.text
                 )}
             >
-                {order?.events.map((event: IEvent, index: number) => (
+                {/* {order?.events.map((event: IEvent, index: number) => (
                     <Step key={index}>
                         <StepLabel
                             optional={
@@ -56,7 +56,7 @@ export const OrderDetails = ({ order }: Props) => {
                             {event.status}
                         </StepLabel>
                     </Step>
-                ))}
+                ))} */}
             </Stepper>
 
             <Divider />

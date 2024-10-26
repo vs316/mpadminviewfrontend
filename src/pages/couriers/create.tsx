@@ -31,8 +31,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuItem from "@mui/material/MenuItem"; // Added import for MenuItem
 import type { TextFieldProps } from "@mui/material/TextField";
-import type { ICourier, IFile, IStore, Nullable } from "../../interfaces";
-import { useImageUpload } from "../../utils";
+import type { ICourier, Nullable } from "../../interfaces";
 import Divider from "@mui/material/Divider";
 import { courierService } from "../../services/courierService";
 
@@ -72,7 +71,8 @@ export const CourierCreate = () => {
             type: "replace",
         });
     };
-    const handleSubmit = async (data: ICourier) => {
+    const handleSubmit = async (data: Nullable<ICourier>) => {
+        if (!data) return;
         try {
             const response = await courierService.createCourier({
                 name: data.name,
@@ -212,62 +212,13 @@ const useStepsFormList = ({ stepsForm }: UseStepsFormList) => {
         formState: { errors },
         refineCore: { formLoading },
     } = stepsForm;
-    //const avatarInput: IFile[] | null = watch("avatar");
-
-    const { autocompleteProps: storesAutoCompleteProps } =
-        useAutocomplete<IStore>({
-            resource: "stores",
-        });
 
     const { autocompleteProps: vehiclesAutoCompleteProps } = useAutocomplete({
         resource: "vehicles",
     });
 
-    const imageUploadOnChangeHandler = async (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const target = event.target;
-        const file: File = (target.files as FileList)[0];
-
-        const image = await useImageUpload({
-            apiUrl,
-            file,
-        });
-
-        // setValue("avatar", image, { shouldValidate: true });
-    };
-
     const stepPersonal = (
         <Stack gap="24px" key="step-personal">
-            {/* <Controller
-        control={control}
-       // name="avatar"
-        defaultValue={null}
-        rules={{
-          required: t("errors.required.field", {
-            field: "avatar",
-          }),
-        }}
-        render={({ field }) => {
-          return (
-            <CourierImageUpload
-              {...field}
-              previewURL={avatarInput?.[0]?.url}
-              showOverlay={false}
-              inputProps={{
-                id: "avatar",
-                onChange: imageUploadOnChangeHandler,
-              }}
-              sx={{
-                margin: "auto",
-              }}
-            />
-          );
-        }}
-      />
-      {errors.avatar && (
-        <FormHelperText error>{errors.avatar.message}</FormHelperText>
-      )} */}
             <FormControl fullWidth>
                 <Controller
                     control={control}

@@ -14,72 +14,67 @@ type Props = {
     data: ISalesChart[];
 };
 
-// Improved function to consolidate data by date
-const consolidateData = (data: ISalesChart[]) => {
-    // Sort data by date first
-    const sortedData = [...data].sort(
-        (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf()
-    );
-
-    // Group and sum by date
-    const consolidatedMap = sortedData.reduce(
-        (acc: { [key: string]: ISalesChart }, item) => {
-            const dateKey = dayjs(item.created_at).format("YYYY-MM-DD");
-
-            if (!acc[dateKey]) {
-                acc[dateKey] = {
-                    created_at: dateKey,
-                    amount: 0,
-                    title: `Order Amount`,
-                };
-            }
-
-            acc[dateKey].amount += Number(item.amount);
-            return acc;
-        },
-        {}
-    );
-
-    // Convert back to array and ensure dates are sorted
-    return Object.values(consolidatedMap).sort(
-        (a, b) => dayjs(a.created_at).valueOf() - dayjs(b.created_at).valueOf()
-    );
-};
-
 export const DailyRevenue = (props: Props) => {
-    const rawData = props.data || [];
-    const data = consolidateData(rawData);
-    console.log(data);
+    const { data } = props;
+
+    // Aggregate revenue by date
+    const formattedData = data.reduce((acc, item) => {
+        const dateKey = dayjs(item.created_at).format("YYYY-MM-DD");
+
+        if (!acc[dateKey]) {
+            acc[dateKey] = {
+                date: dateKey,
+                amount: 0,
+            };
+        }
+        acc[dateKey].amount += Number(item.amount);
+        return acc;
+    }, {} as Record<string, { date: string; amount: number }>);
+
+    // Convert to array and sort by date
+    const chartData = Object.values(formattedData).sort(
+        (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf()
+    );
+
+    // Calculate reasonable chart height based on data
+    const maxValue = Math.max(...chartData.map((item) => item.amount));
+    const yAxisMax = Math.ceil(maxValue * 1.2); // Add 20% padding
+
     return (
-        <ResponsiveContainer width="99%" height={300}>
+        <ResponsiveContainer width="99%" height={200}>
             <AreaChart
-                data={data}
-                margin={{ top: 30, right: 20, left: 10, bottom: 50 }} // Adjusted bottom margin
+                data={chartData}
+                margin={{
+                    top: 10,
+                    right: 10,
+                    left: 0,
+                    bottom: 20,
+                }}
             >
                 <XAxis
-                    dataKey="created_at"
-                    fontSize={12}
-                    angle={-30} // Rotate labels for better visibility
-                    textAnchor="end" // Align text to end
-                    padding={{ left: 10, right: 10 }}
-                    tickFormatter={(value) => {
-                        // Directly use value since it's already a valid date string
-                        return value; // Return date in YYYY-MM-DD format or modify as needed
-                    }}
-                    tickCount={data.length > 0 ? data.length : 1} // Show ticks based on data length
-                    interval={0} // Show all ticks
+                    dataKey="date"
+                    fontSize={11}
+                    tickFormatter={(value) => dayjs(value).format("MM/DD")}
+                    axisLine
+                    tickLine
+                    dy={8}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
                 />
                 <YAxis
-                    dataKey="amount"
-                    fontSize={12}
-                    tickFormatter={(amount) => {
-                        return `₹${Number(amount).toLocaleString("en-IN", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        })}`;
-                    }}
-                    // domain={[0, "dataMax + 500"]} // Set a custom domain to prevent clipping
-                    padding={{ top: 30, bottom: 50 }}
+                    fontSize={11}
+                    axisLine
+                    tickLine
+                    allowDecimals={false}
+                    domain={[0, yAxisMax]}
+                    width={50}
+                    tickFormatter={(value) =>
+                        `₹${Number(value).toLocaleString("en-IN", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                        })}`
+                    }
                 />
                 <defs>
                     <linearGradient id="area-color" x1="0" y1="0" x2="0" y2="1">
@@ -102,19 +97,23 @@ export const DailyRevenue = (props: Props) => {
                     fill="url(#area-color)"
                 />
                 <Tooltip
+                    cursor={{
+                        fill: "rgba(33, 150, 243, 0.1)",
+                        radius: 4,
+                    }}
                     content={
                         <ChartTooltip
-                            valueFormatter={(amount) =>
+                            labelFormatter={(label) =>
+                                dayjs(label).format("MMM D, YYYY")
+                            }
+                            valueFormatter={(value) =>
                                 new Intl.NumberFormat("en-IN", {
                                     style: "currency",
                                     currency: "INR",
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
-                                }).format(Number(amount))
+                                }).format(Number(value))
                             }
-                            // labelFormatter={(label) =>
-                            //     dayjs(label).format("MMM D, YYYY")
-                            // }
                         />
                     }
                 />
@@ -122,3 +121,5 @@ export const DailyRevenue = (props: Props) => {
         </ResponsiveContainer>
     );
 };
+
+export default DailyRevenue;

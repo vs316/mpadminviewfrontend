@@ -14,64 +14,74 @@ type Props = {
     data: ISalesChart[];
 };
 
-// Improved function to aggregate users by date
-const aggregateUsersByDate = (data: ISalesChart[]) => {
-    // Create a map to store counts by date
-    const countsByDate = data.reduce((acc: { [key: string]: number }, item) => {
-        // Format the date consistently for grouping
+export const NewCustomers = (props: Props) => {
+    const { data } = props;
+
+    // Aggregate users by date
+    const formattedData = data.reduce((acc, item) => {
         const dateKey = dayjs(item.created_at).format("YYYY-MM-DD");
 
-        // Increment the count for this date
-        acc[dateKey] = (acc[dateKey] || 0) + 1;
-
+        if (!acc[dateKey]) {
+            acc[dateKey] = {
+                date: dateKey,
+                value: 0,
+            };
+        }
+        acc[dateKey].value += 1;
         return acc;
-    }, {});
+    }, {} as Record<string, { date: string; value: number }>);
 
     // Convert to array and sort by date
-    return Object.entries(countsByDate)
-        .map(([date, count]) => ({
-            date,
-            value: count,
-        }))
-        .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
-};
+    const chartData = Object.values(formattedData).sort(
+        (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf()
+    );
 
-export const NewCustomers = (props: Props) => {
-    const rawData = props.data || [];
-    // Use the aggregated data instead of raw data
-    const formattedData = aggregateUsersByDate(rawData);
+    // Calculate reasonable chart height based on data
+    const maxValue = Math.max(...chartData.map((item) => item.value));
+    const yAxisMax = Math.ceil(maxValue * 1.2); // Add 20% padding
 
     return (
-        <ResponsiveContainer width="99%" height={300}>
+        <ResponsiveContainer width="99%" height={200}>
             <BarChart
-                data={formattedData}
-                barSize={15}
-                margin={{ top: 20, right: 10, left: -25, bottom: 25 }}
+                data={chartData}
+                barSize={20}
+                margin={{
+                    top: 10,
+                    right: 10,
+                    left: 0,
+                    bottom: 20,
+                }}
             >
                 <XAxis
                     dataKey="date"
-                    fontSize={12}
+                    fontSize={11}
                     tickFormatter={(value) => dayjs(value).format("MM/DD")}
-                    axisLine={true}
-                    tickLine={true}
-                    dy={8} // Add some padding between the axis and the labels
+                    axisLine
+                    tickLine
+                    dy={8}
+                    angle={-45}
+                    textAnchor="end"
+                    height={60}
                 />
                 <YAxis
-                    dataKey="value"
-                    fontSize={12}
-                    // Ensure we show whole numbers since we're counting users
-                    tickFormatter={(value) => Math.round(value).toString()}
-                    axisLine={true}
-                    tickLine={true}
+                    fontSize={11}
+                    axisLine
+                    tickLine
+                    allowDecimals={false}
+                    domain={[0, yAxisMax]}
+                    width={40}
                 />
                 <Bar
-                    type="natural"
+                    type="monotone"
                     dataKey="value"
                     fill="#2196F3"
-                    radius={[4, 4, 0, 0]} // Optional: adds rounded corners to bars
+                    radius={[4, 4, 0, 0]}
                 />
                 <Tooltip
-                    cursor={{ fill: "rgba(255, 255, 255, 0.2)", radius: 4 }}
+                    cursor={{
+                        fill: "rgba(33, 150, 243, 0.1)",
+                        radius: 4,
+                    }}
                     content={
                         <ChartTooltip
                             labelFormatter={(label) =>
@@ -87,3 +97,5 @@ export const NewCustomers = (props: Props) => {
         </ResponsiveContainer>
     );
 };
+
+export default NewCustomers;

@@ -21,7 +21,14 @@ export interface ISalesChart {
 
 export interface IOrderStatus {
     id: number;
-    text: "Pending" | "Ready" | "On The Way" | "Delivered" | "Cancelled";
+    text:
+        | "PENDING"
+        | "Ready"
+        | "On The Way"
+        | "Delivered"
+        | "Cancelled"
+        | "ACCEPTED"
+        | "REJECTED";
 }
 
 export interface IUser {
@@ -38,6 +45,7 @@ export interface IUser {
 export interface IIdentity {
     id: number;
     name: string;
+    avatar: string;
 }
 
 export interface IAddress {
@@ -45,32 +53,21 @@ export interface IAddress {
     coordinate: [string | number, string | number];
 }
 
-export interface IFile {
-    lastModified?: number;
-    name: string;
-    percent?: number;
-    size: number;
-    status?: "error" | "success" | "done" | "uploading" | "removed";
-    type: string;
-    uid?: string;
-    url: string;
-}
+// export interface IFile {
+//     lastModified?: number;
+//     name: string;
+//     percent?: number;
+//     size: number;
+//     status?: "error" | "success" | "done" | "uploading" | "removed";
+//     type: string;
+//     uid?: string;
+//     url: string;
+// }
 
-export interface IEvent {
-    date: string;
-    status: string;
-}
-
-export interface IStore {
-    id: number;
-    phoneNumber: string;
-    email: string;
-    title: string;
-    isActive: boolean;
-    createdAt: string;
-    address: IAddress;
-    products: IProduct[];
-}
+// export interface IEvent {
+//     date: string;
+//     status: string;
+// }
 
 export interface IOrder {
     shipment_id: number;
@@ -84,12 +81,61 @@ export interface IOrder {
     shipFrom?: IShipFrom; // Adding shipFrom
     shipTo?: IShipTo; // Adding shipTo
 }
+export interface IPayment {
+    payment_id: number;
+    shipment_id?: number | null;
+    amount?: number | null; // Using number for Decimal
+    payment_method?: string | null;
+    payment_status?: string | null;
+    created_at?: Date | null;
 
-export interface ICategory {
-    id: number;
-    title: string;
-    isActive: boolean;
+    // Related entity
+    shipment?: IShipment | null;
 }
+// export interface IShipment {
+//     shipment_id: number;
+//     user_id?: number | null;
+//     from_address_id?: number | null;
+//     to_address_id?: number | null;
+//     shipment_type?: string | null;
+//     status?: string | null;
+//     is_draft?: boolean | null;
+//     is_finalized?: boolean | null;
+//     created_at?: Date | null;
+//     updated_at?: Date | null;
+
+//     // Related entities
+//     payment?: IPayment[];
+//     user?: IUser | null;
+//     shipfrom?: IShipFrom | null;
+//     shipto?: IShipTo | null;
+//     shipmentitem?: IShipmentItem[];
+// }
+interface IShipment {
+    shipment_id: number;
+    status: OrderStatus;
+    created_at: string;
+    user: {
+        first_name: string;
+        last_name: string;
+    };
+    shipfrom: {
+        city: string;
+    };
+    shipto: {
+        city: string;
+    };
+    payment: [
+        {
+            amount: string;
+        }
+    ];
+}
+// export interface ICategory {
+//     id: number;
+//     title: string;
+//     isActive: boolean;
+// }
 
 export interface IOrderFilterVariables {
     q?: string;
@@ -158,6 +204,7 @@ export interface ICourierStatus {
 
 export interface ICourier {
     courier_id: number;
+    avatar: string;
     name: string | null;
     surname: string | null;
     email: string | null;
@@ -180,11 +227,11 @@ export interface IReview {
     comment: string[];
 }
 
-export interface ITrendingProducts {
-    id: number;
-    product: IProduct;
-    orderCount: number;
-}
+// export interface ITrendingProducts {
+//     id: number;
+//     product: IProduct;
+//     orderCount: number;
+// }
 
 export type IVehicle = {
     model: string;

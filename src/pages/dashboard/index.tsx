@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import Grid from "@mui/material/Grid";
 import { NumberField } from "@refinedev/mui";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
+import LocalShippingIcon from "@mui/icons-material/LocalShippingOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import PlaceOutlinedIcon from "@mui/icons-material/PlaceOutlined";
 import WatchLaterOutlinedIcon from "@mui/icons-material/WatchLaterOutlined";
@@ -81,7 +81,7 @@ export const DashboardPage: React.FC = () => {
         // total: number;
         trend: number;
     }>({
-        url: `${API_URL}/payment`,
+        url: `${API_URL}/payment/dailyrevenue`,
         method: "get",
         config: {
             query: dateFilterQuery,
@@ -211,7 +211,7 @@ export const DashboardPage: React.FC = () => {
                 >
                     <Card
                         title={t("dashboard.dailyOrders.title")}
-                        icon={<ShoppingBagOutlinedIcon />}
+                        icon={<LocalShippingIcon/>}
                         sx={{
                             ".MuiCardContent-root:last-child": {
                                 paddingBottom: "24px",
@@ -331,7 +331,7 @@ export const DashboardPage: React.FC = () => {
                     }}
                 >
                     <Card
-                        icon={<ShoppingBagOutlinedIcon />}
+                        icon={<LocalShippingIcon />}
                         title={t("dashboard.recentOrders.title")}
                         cardContentProps={{
                             sx: {

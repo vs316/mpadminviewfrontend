@@ -15,55 +15,72 @@ type Props = {
 };
 
 export const DailyOrders = (props: Props) => {
-    const data = props.data || [];
+    const { data } = props;
 
-    // Aggregate data by date using the original date format
-    const formattedData = data
-        .reduce((acc, item) => {
-            const dateKey = item.created_at;
-            const existingEntry = acc.find((entry) => entry.date === dateKey);
+    // Aggregate orders by date
+    const formattedData = data.reduce((acc, item) => {
+        // Format date to YYYY-MM-DD to ensure consistent grouping
+        const dateKey = dayjs(item.created_at).format("YYYY-MM-DD");
 
-            if (existingEntry) {
-                existingEntry.value += 1;
-            } else {
-                acc.push({ date: dateKey, value: 1 });
-            }
+        if (!acc[dateKey]) {
+            acc[dateKey] = {
+                date: dateKey,
+                value: 0,
+            };
+        }
+        acc[dateKey].value += 1;
+        return acc;
+    }, {} as Record<string, { date: string; value: number }>);
 
-            return acc;
-        }, [] as { date: string; value: number }[])
-        .sort((a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf());
+    // Convert to array and sort by date
+    const chartData = Object.values(formattedData).sort(
+        (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf()
+    );
+
+    // Calculate reasonable chart height based on data
+    const maxValue = Math.max(...chartData.map((item) => item.value));
+    const yAxisMax = Math.ceil(maxValue * 1.2); // Add 20% padding
 
     return (
-        <ResponsiveContainer width="99%" height={300}>
+        <ResponsiveContainer width="99%" height={200}>
             <BarChart
-                data={formattedData}
-                barSize={15}
-                margin={{ top: 20, right: 10, left: -25, bottom: 0 }}
+                data={chartData}
+                barSize={20}
+                margin={{
+                    top: 10, // Reduced top margin
+                    right: 10,
+                    left: 0,
+                    bottom: 20, // Increased bottom margin for x-axis labels
+                }}
             >
                 <XAxis
                     dataKey="date"
-                    fontSize={12}
+                    fontSize={11}
                     tickFormatter={(value) => dayjs(value).format("MM/DD")}
                     axisLine
                     tickLine
                     dy={8}
+                    angle={-45} // Angle the date labels
+                    textAnchor="end" // Align angled text
+                    height={60} // Increase height to accommodate angled labels
                 />
                 <YAxis
-                    fontSize={12}
+                    fontSize={11}
                     axisLine
                     tickLine
                     allowDecimals={false}
-                    domain={[0, "dataMax"]}
+                    domain={[0, yAxisMax]}
+                    width={40} // Give more space for y-axis labels
                 />
                 <Bar
-                    type="natural"
+                    type="monotone"
                     dataKey="value"
                     fill="#2196F3"
                     radius={[4, 4, 0, 0]}
                 />
                 <Tooltip
                     cursor={{
-                        fill: "rgba(255, 255, 255, 0.2)",
+                        fill: "rgba(33, 150, 243, 0.1)",
                         radius: 4,
                     }}
                     content={
@@ -81,3 +98,5 @@ export const DailyOrders = (props: Props) => {
         </ResponsiveContainer>
     );
 };
+
+export default DailyOrders;

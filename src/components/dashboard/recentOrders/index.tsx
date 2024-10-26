@@ -1,11 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import {
-    UpdatePasswordFormTypes,
-    useNavigation,
-    useTranslate,
-    useUpdate,
-    useUpdatePassword,
-} from "@refinedev/core";
+import React, { useState, useMemo, useEffect } from "react";
+import { useNavigation, useTranslate, useList } from "@refinedev/core";
 import { NumberField, useDataGrid } from "@refinedev/mui";
 import CheckOutlined from "@mui/icons-material/CheckOutlined";
 import CloseOutlined from "@mui/icons-material/CloseOutlined";
@@ -16,100 +10,200 @@ import {
     GridActionsCellItem,
     type GridColDef,
 } from "@mui/x-data-grid";
-import type { IOrder } from "../../../interfaces";
-import { getUniqueListWithCount } from "../../../utils";
+import { IShipment } from "../../../interfaces";
+import dayjs from "dayjs";
+import { OrderStatus } from "../../order";
 
 export const RecentOrders: React.FC = () => {
     const t = useTranslate();
     const { show } = useNavigation();
-    const { mutate } = useUpdate({
-        resource: "orders",
+    const [shipments, setShipments] = useState<IShipment[]>([]);
+
+    const [filterRange, setFilterRange] = useState({
+        startDate: "",
+        endDate: "",
     });
-    const { mutate: updatePassword } =
-        useUpdatePassword<Record<string, string>>();
 
-    useEffect(() => {
-        updatePassword({
-            redirectPath: "/custom-url",
-            query: "?foo=bar",
-        });
-    }, [updatePassword]);
+    // Set date range for last week
+    const handleLastWeek = () => {
+        const today = dayjs();
+        const startDate = today
+            .subtract(1, "week")
+            .startOf("week")
+            .toISOString();
+        const endDate = today.subtract(1, "week").endOf("week").toISOString();
+        setFilterRange({ startDate, endDate });
+    };
 
-    const { dataGridProps } = useDataGrid<IOrder>({
-        resource: "orders",
-        initialSorter: [
-            {
-                field: "createdAt",
-                order: "desc",
-            },
-        ],
+    // Set date range for last month
+    const handleLastMonth = () => {
+        const today = dayjs();
+        const startDate = today
+            .subtract(1, "month")
+            .startOf("month")
+            .toISOString();
+        const endDate = today.subtract(1, "month").endOf("month").toISOString();
+        setFilterRange({ startDate, endDate });
+    };
+
+    const { dataGridProps } = useDataGrid<IShipment>({
+        resource: "shipments",
+        initialSorter: [{ field: "created_at", order: "desc" }],
         initialPageSize: 10,
-        permanentFilter: [
-            {
-                field: "status.text",
-                operator: "eq",
-                value: "Pending",
-            },
-        ],
         syncWithLocation: false,
     });
 
-    const columns = useMemo<GridColDef<IOrder>[]>(
+    // Function to fetch shipments
+    const fetchShipments = async () => {
+        try {
+            const response = await fetch("http://localhost:3000/shipments");
+            if (!response.ok) {
+                throw new Error("Failed to fetch shipments");
+            }
+            const data = await response.json();
+            setShipments(data);
+        } catch (error) {
+            console.error("Error fetching shipments:", error);
+        }
+    };
+
+    // Initial fetch
+    useEffect(() => {
+        fetchShipments();
+    }, []);
+
+    const handleAccept = async (shipment_id: number) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/shipments/${shipment_id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        status: { set: "ACCEPTED" },
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to update shipment status");
+            }
+
+            // Update the local state immediately
+            setShipments((prevShipments) =>
+                prevShipments.map((shipment) =>
+                    shipment.shipment_id === shipment_id
+                        ? { ...shipment, status: "ACCEPTED" }
+                        : shipment
+                )
+            );
+
+            // Fetch fresh data
+            await fetchShipments();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleReject = async (shipment_id: number) => {
+        try {
+            const response = await fetch(
+                `http://localhost:3000/shipments/${shipment_id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        status: { set: "REJECTED" },
+                    }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to update shipment status");
+            }
+
+            // Update the local state immediately
+            setShipments((prevShipments) =>
+                prevShipments.map((shipment) =>
+                    shipment.shipment_id === shipment_id
+                        ? { ...shipment, status: "REJECTED" }
+                        : shipment
+                )
+            );
+
+            // Fetch fresh data
+            await fetchShipments();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const columns = useMemo<GridColDef<IShipment>[]>(
         () => [
             {
-                field: "orderNumber",
-                renderCell: function render({ row }) {
-                    return <Typography>#{row.orderNumber}</Typography>;
-                },
-                width: 88,
+                field: "ShipmentID",
+                headerName: "Shipment ID",
+                renderCell: ({ row }) => (
+                    <Typography>#{row.shipment_id}</Typography>
+                ),
+                width: 120,
             },
             {
                 field: "user",
+                headerName: "User Name",
                 width: 220,
-                renderCell: function render({ row }) {
-                    return (
-                        <Stack spacing="4px">
-                            <Typography>{row.user.fullName}</Typography>
-                            <Typography
-                                variant="caption"
-                                color="text.secondary"
-                                sx={{
-                                    whiteSpace: "pre-wrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis",
-                                    display: "-webkit-box",
-                                    WebkitLineClamp: "2",
-                                    WebkitBoxOrient: "vertical",
-                                    minWidth: "100px",
-                                }}
-                            >
-                                {row.user.addresses[0].text}
-                            </Typography>
-                        </Stack>
-                    );
-                },
+                renderCell: ({ row }) => (
+                    <Stack spacing="4px">
+                        <Typography>{`${row.user.first_name} ${row.user.last_name}`}</Typography>
+                        <Typography
+                            variant="caption"
+                            color="text.secondary"
+                            sx={{
+                                whiteSpace: "pre-wrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: "2",
+                                WebkitBoxOrient: "vertical",
+                                minWidth: "100px",
+                            }}
+                        >
+                            {row.shipfrom.city}
+                        </Typography>
+                    </Stack>
+                ),
             },
             {
                 field: "amount",
+                headerName: "Amount",
                 align: "right",
-                width: 80,
-                renderCell: function render({ row }) {
-                    return (
-                        <NumberField
-                            options={{
-                                currency: "INR",
-                                style: "currency",
-                                notation: "standard",
-                            }}
-                            value={row.amount}
-                        />
-                    );
-                },
+                width: 100,
+                renderCell: ({ row }) => (
+                    <NumberField
+                        options={{
+                            currency: "INR",
+                            style: "currency",
+                            notation: "standard",
+                        }}
+                        value={row.payment[0].amount}
+                    />
+                ),
+            },
+            {
+                field: "status",
+                headerName: "Order Status",
+                width: 140,
+                renderCell: ({ row }) => <OrderStatus status={row.status} />,
             },
             {
                 field: "actions",
+                headerName: "Actions",
                 type: "actions",
-                width: 80,
+                width: 100,
                 getActions: ({ id }) => [
                     <GridActionsCellItem
                         key={1}
@@ -117,17 +211,7 @@ export const RecentOrders: React.FC = () => {
                         sx={{ padding: "2px 6px" }}
                         label={t("buttons.accept")}
                         showInMenu
-                        onClick={() => {
-                            mutate({
-                                id,
-                                values: {
-                                    status: {
-                                        id: 2,
-                                        text: "Ready",
-                                    },
-                                },
-                            });
-                        }}
+                        onClick={() => handleAccept(Number(id))}
                     />,
                     <GridActionsCellItem
                         key={2}
@@ -135,30 +219,21 @@ export const RecentOrders: React.FC = () => {
                         sx={{ padding: "2px 6px" }}
                         label={t("buttons.reject")}
                         showInMenu
-                        onClick={() =>
-                            mutate({
-                                id,
-                                values: {
-                                    status: {
-                                        id: 5,
-                                        text: "Cancelled",
-                                    },
-                                },
-                            })
-                        }
+                        onClick={() => handleReject(Number(id))}
                     />,
                 ],
             },
         ],
-        [t, mutate]
+        [t]
     );
 
     return (
         <DataGrid
             {...dataGridProps}
+            rows={shipments}
             onRowClick={(row) => show("orders", row.id)}
+            getRowId={(row) => row.shipment_id}
             columns={columns}
-            columnHeaderHeight={0}
             pageSizeOptions={[10, 25, 50, 100]}
             sx={{
                 height: "100%",
