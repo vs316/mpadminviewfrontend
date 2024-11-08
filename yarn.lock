@@ -2798,6 +2798,13 @@
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.14.0"
 
+"@welldone-software/why-did-you-render@^8.0.3":
+  version "8.0.3"
+  resolved "https://registry.npmjs.org/@welldone-software/why-did-you-render/-/why-did-you-render-8.0.3.tgz"
+  integrity sha512-bb5bKPMStYnocyTBVBu4UTegZdBqzV1mPhxc0UIV/S43KFUSRflux9gvzJfu2aM4EWLJ3egTvdjOi+viK+LKGA==
+  dependencies:
+    lodash "^4"
+
 "@xstate/react@^3.2.2":
   version "3.2.2"
   resolved "https://registry.npmjs.org/@xstate/react/-/react-3.2.2.tgz"
@@ -4957,7 +4964,7 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
-lodash@^4.17.19, lodash@^4.17.21, lodash@4.17.21:
+lodash@^4, lodash@^4.17.19, lodash@^4.17.21, lodash@4.17.21:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

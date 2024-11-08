@@ -35,7 +35,7 @@ export const OrderList = () => {
     // Use useDataGrid hook with proper configuration
     const {
         dataGridProps,
-        tableQueryResult: { refetch },
+        tableQuery: { refetch },
     } = useDataGrid<IShipment, HttpError>({
         resource: "shipments", // Specify the resource name
         pagination: {

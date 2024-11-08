@@ -170,6 +170,7 @@ export const RecentOrders: React.FC = () => {
                                 WebkitLineClamp: "2",
                                 WebkitBoxOrient: "vertical",
                                 minWidth: "100px",
+                                marginBottom: "0",
                             }}
                         >
                             {row.shipfrom.city}
@@ -235,6 +236,7 @@ export const RecentOrders: React.FC = () => {
             getRowId={(row) => row.shipment_id}
             columns={columns}
             pageSizeOptions={[10, 25, 50, 100]}
+            rowHeight={60}
             sx={{
                 height: "100%",
                 border: "none",
@@ -247,7 +249,7 @@ export const RecentOrders: React.FC = () => {
                     maxHeight: "max-content !important",
                     minHeight: "max-content !important",
                     padding: "16px",
-                    alignItems: "flex-start",
+                    alignItems: "center",
                 },
             }}
         />

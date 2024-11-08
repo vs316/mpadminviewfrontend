@@ -18,21 +18,20 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
+//import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import BrightnessHighIcon from "@mui/icons-material/BrightnessHigh";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { signOut } from "aws-amplify/auth";
+import { useNavigate } from "react-router-dom";
 import i18n from "../../i18n";
-import type {
-    ICourier,
-    IShipment,
-    IShipmentItem,
-    IIdentity,
-} from "../../interfaces";
+import type { ICourier, IShipment, IIdentity } from "../../interfaces";
 import { ColorModeContext } from "../../contexts";
 
 interface IOptions {
@@ -45,6 +44,8 @@ interface IOptions {
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
     const [value, setValue] = useState("");
     const [options, setOptions] = useState<IOptions[]>([]);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const navigate = useNavigate();
 
     const { mode, setMode } = useContext(ColorModeContext);
 
@@ -55,6 +56,23 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
 
     const t = useTranslate();
 
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            handleMenuClose();
+            navigate("/logout");
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    };
     const { refetch: refetchOrders } = useList<IShipment>({
         resource: "orders",
         config: {
@@ -275,7 +293,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                             }}
                         >
                             {[...(i18n.languages ?? [])]
-                                .sort()
+                                .sort((a, b) => a.localeCompare(b))
                                 .map((lang: string) => (
                                     <MenuItem
                                         selected={currentLocale === lang}
@@ -333,7 +351,46 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
                             >
                                 {user?.name}
                             </Typography>
-                            <Avatar src={user?.avatar} alt={user?.name} />
+                            <IconButton onClick={handleMenuOpen}>
+                                <Avatar src={user?.avatar} alt={user?.name} />
+                            </IconButton>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                                slotProps={{
+                                    paper: {
+                                        elevation: 0,
+                                        sx: {
+                                            overflow: "visible",
+                                            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                                            mt: 1.5,
+                                            "& .MuiAvatar-root": {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mr: 1,
+                                            },
+                                        },
+                                    },
+                                }}
+                                transformOrigin={{
+                                    horizontal: "right",
+                                    vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                    horizontal: "right",
+                                    vertical: "bottom",
+                                }}
+                            >
+                                <MenuItem>
+                                    <Avatar src={user?.avatar} /> {user?.name}
+                                </MenuItem>
+                                <MenuItem onClick={handleLogout}>
+                                    <LogoutIcon sx={{ mr: 2 }} />
+                                    Logout
+                                </MenuItem>
+                            </Menu>
                         </Stack>
                     </Stack>
                 </Stack>
