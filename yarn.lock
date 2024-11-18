@@ -1839,10 +1839,10 @@
     temp "^0.9.4"
     tslib "^2.6.2"
 
-"@refinedev/core@^4.51.0", "@refinedev/core@^4.55.0":
-  version "4.55.0"
-  resolved "https://registry.npmjs.org/@refinedev/core/-/core-4.55.0.tgz"
-  integrity sha512-9IdfCVV7I+wK2lZN0uSddUj3g5hw01u5bsyNSGExlSNkbXk7yfM/jQ5q05c5VCpZX+s/ZOb2JPa8166Ebyf0yg==
+"@refinedev/core@^4.51.0", "@refinedev/core@^4.56.0":
+  version "4.56.0"
+  resolved "https://registry.npmjs.org/@refinedev/core/-/core-4.56.0.tgz"
+  integrity sha512-u5wniUzHyembX803VAmAFLt0Mbd8SMjkKna7noz2hh3d7iZh6C9uzpmWO0Y4ZEdgwoYCJKIYSLeOSV/LdPbIkw==
   dependencies:
     "@refinedev/devtools-internal" "1.1.14"
     "@tanstack/react-query" "^4.10.1"
@@ -1918,10 +1918,10 @@
   dependencies:
     kbar "^0.1.0-beta.40"
 
-"@refinedev/mui@^5.21.0":
-  version "5.21.0"
-  resolved "https://registry.npmjs.org/@refinedev/mui/-/mui-5.21.0.tgz"
-  integrity sha512-ATTIdQnT98yBPcSzlDg5TSBTMrPKfqxI5ybZL6vSGI7YAn5p5gxnDtok9TRpMmu6svrhCULEvBs48Dd82td4Aw==
+"@refinedev/mui@^5.22.0":
+  version "5.22.0"
+  resolved "https://registry.npmjs.org/@refinedev/mui/-/mui-5.22.0.tgz"
+  integrity sha512-MMZGfSsPC2pzwhFp20hc90Ek3Bx7wcioNATqKuqJ3PhlAodXp+MEkVJjeLlEN5tnAI+yVbkMUcoL4mf4QyZE/A==
   dependencies:
     "@emotion/react" "^11.8.2"
     "@emotion/styled" "^11.8.1"
@@ -1930,7 +1930,7 @@
     "@mui/material" "^5.14.2"
     "@mui/system" "^5.15.15"
     "@mui/x-data-grid" "^6.6.0"
-    "@refinedev/react-hook-form" "^4.9.0"
+    "@refinedev/react-hook-form" "^4.9.1"
     "@refinedev/ui-types" "^1.22.9"
     dayjs "^1.10.7"
     lodash "^4.17.21"
@@ -1942,10 +1942,10 @@
     tslib "^2.6.2"
     warn-once "^0.1.0"
 
-"@refinedev/react-hook-form@^4.9.0":
-  version "4.9.0"
-  resolved "https://registry.npmjs.org/@refinedev/react-hook-form/-/react-hook-form-4.9.0.tgz"
-  integrity sha512-0/x9Or0uaIc9s1TkhFJeZBNu6BYZR0t1rP/qLcIrbyT/MvUcHyCy8qraClWLfT0njzPErEGYw8Bu4B7kC5LEYA==
+"@refinedev/react-hook-form@^4.9.1":
+  version "4.9.1"
+  resolved "https://registry.npmjs.org/@refinedev/react-hook-form/-/react-hook-form-4.9.1.tgz"
+  integrity sha512-6ZwWIOUOi7tZ9LnmPnHGfGmgaDC6UojJC6VW0y120lPI297yQjJtN9pLvGSCuEJznpwem87gAw8zGk0KmjYmCQ==
   dependencies:
     lodash "^4.17.21"
     lodash-es "^4.17.21"

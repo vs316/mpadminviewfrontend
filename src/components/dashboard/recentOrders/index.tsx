@@ -159,7 +159,7 @@ export const RecentOrders: React.FC = () => {
                 renderCell: ({ row }) => (
                     <Stack spacing="4px">
                         <Typography>{`${row.user.first_name} ${row.user.last_name}`}</Typography>
-                        <Typography
+                        {/* <Typography
                             variant="caption"
                             color="text.secondary"
                             sx={{
@@ -174,7 +174,7 @@ export const RecentOrders: React.FC = () => {
                             }}
                         >
                             {row.shipfrom.city}
-                        </Typography>
+                        </Typography> */}
                     </Stack>
                 ),
             },
@@ -198,7 +198,11 @@ export const RecentOrders: React.FC = () => {
                 field: "status",
                 headerName: "Order Status",
                 width: 140,
-                renderCell: ({ row }) => <OrderStatus status={row.status} />,
+                renderCell: ({ row }) => (
+                    <Typography>
+                        <OrderStatus status={row.status} />
+                    </Typography>
+                ),
             },
             {
                 field: "actions",
@@ -236,20 +240,33 @@ export const RecentOrders: React.FC = () => {
             getRowId={(row) => row.shipment_id}
             columns={columns}
             pageSizeOptions={[10, 25, 50, 100]}
-            rowHeight={60}
+            rowHeight={50}
             sx={{
+                // height: "100%",
+                // border: "none",
+                // "& .MuiDataGrid-row": {
+                //     cursor: "pointer",
+                //     maxHeight: "max-content !important",
+                //     minHeight: "max-content !important",
+                // },
+                // "& .MuiDataGrid-cell": {
+                //     maxHeight: "max-content !important",
+                //     minHeight: "max-content !important",
+                //     padding: "16px",
+                //     alignItems: "center",
+                // },
                 height: "100%",
                 border: "none",
                 "& .MuiDataGrid-row": {
                     cursor: "pointer",
-                    maxHeight: "max-content !important",
-                    minHeight: "max-content !important",
+                    maxHeight: "none", // Remove maxHeight to allow proper alignment
+                    minHeight: "none", // Remove minHeight to allow proper alignment
                 },
                 "& .MuiDataGrid-cell": {
-                    maxHeight: "max-content !important",
-                    minHeight: "max-content !important",
-                    padding: "16px",
+                    padding: "8px", // Adjust padding as needed
                     alignItems: "center",
+                    display: "flex", // Use flex to align content properly
+                    justifyContent: "center", // Center content horizontally
                 },
             }}
         />

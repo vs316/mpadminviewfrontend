@@ -78,7 +78,7 @@ export const DashboardPage: React.FC = () => {
 
     const { data: dailyRevenueData } = useCustom<{
         data: ISalesChart[];
-        // total: number;
+        total: number;
         trend: number;
     }>({
         url: `${API_URL}/payment/dailyrevenue`,
@@ -94,7 +94,7 @@ export const DashboardPage: React.FC = () => {
         total: number;
         trend: number;
     }>({
-        url: `${API_URL}/payment/today`,
+        url: `${API_URL}/payment/dailyrevenue`,
         method: "get",
         config: {
             query: dateFilterQuery,
@@ -182,7 +182,7 @@ export const DashboardPage: React.FC = () => {
                         //             trend={dailyRevenue?.trend}
                         //             text={
                         //                 <NumberField
-                        //                     value={dailyRevenue?.trend || 0}
+                        //                     value={dailyRevenue?.trend ?? 0}
                         //                     options={{
                         //                         style: "currency",
                         //                         currency: "INR",
@@ -211,7 +211,7 @@ export const DashboardPage: React.FC = () => {
                 >
                     <Card
                         title={t("dashboard.dailyOrders.title")}
-                        icon={<LocalShippingIcon/>}
+                        icon={<LocalShippingIcon />}
                         sx={{
                             ".MuiCardContent-root:last-child": {
                                 paddingBottom: "24px",
